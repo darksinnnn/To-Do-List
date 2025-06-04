@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "todolist",
+    "scheme": "todolist",
     "slug": "todolist",
     "version": "1.0.0",
     "orientation": "portrait",
