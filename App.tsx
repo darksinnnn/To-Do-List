@@ -1,28 +1,52 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import { enableScreens } from 'react-native-screens';
+enableScreens();
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+import Login from './screens/Login'; 
+import Home from './screens/Home';   
+import { RootStackParamList } from './components/types';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const App = () => {
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth().onAuthStateChanged(user => {
+      setUser(user);
+      if (initializing) setInitializing(false);
+    });
+
+    return unsubscribe;
+  }, [initializing]);
+
+  if (initializing) return null;
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {user ? (
+          <Stack.Screen name="Home" component={Home} />
+        ) : (
+          <Stack.Screen name="Login">
+            {props => (
+              <Login
+                {...props}
+                onSwitchToSignup={() => {
+                  // Handle signup navigation later if needed
+                }}
+              />
+            )}
+          </Stack.Screen>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+};
 
 export default App;
