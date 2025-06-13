@@ -38,7 +38,7 @@ const App = () => {
               <Login
                 {...props}
                 onSwitchToSignup={() => {
-                  // Handle signup navigation later if needed
+                  
                 }}
               />
             )}
