@@ -62,10 +62,10 @@ const Login: React.FC<Props> = ({ navigation, onSwitchToSignup }) => {
   try {
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-    await GoogleSignin.signOut(); // optional cleanup
-    await GoogleSignin.signIn();  // required before getTokens()
+    await GoogleSignin.signOut();
+    await GoogleSignin.signIn();  
 
-    const { idToken } = await GoogleSignin.getTokens(); // ✅ safe and correct
+    const { idToken } = await GoogleSignin.getTokens(); 
 
     if (!idToken) throw new Error('No ID token found');
 
